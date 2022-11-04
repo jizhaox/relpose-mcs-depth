@@ -3,7 +3,18 @@ This package implements relative pose estimation for multi-camera systems from t
 
 Source codes and Matlab mex files with demo code are provided in the package. The core solvers are written by C++. Matlab mex files are compiled using Ubuntu 16.04 + Matlab R2019a. Run `test_solver_AC.m` in folder "test".
 
+# Reference
 
+[1] Banglei Guan, and Ji Zhao. [**Relative Pose Estimation for Multi-Camera Systems from Two Affine Correspondences**](https://www.ecva.net/papers/eccv_2022/papers_ECCV/html/5358_ECCV_2022_paper.php). European Conference on Computer Vision, 2022. (Oral)
+
+If you use this package in an academic work, please cite:
+
+    @inproceedings{guan2022relative,
+      title={Relative Pose Estimation for Multi-Camera Systems from Two Affine Correspondences},
+      author={Guan, Banglei and Zhao, Ji},
+      booktitle={European Conference on Computer Vision},
+      year={2022}
+     }
 
 
 # solver_depth_inter_2ac

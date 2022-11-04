@@ -29,7 +29,7 @@ for ii = 1:2
     tij = Hij(1:3,4);
     % epipolar constraint of PC
     x = tij;
-    skew_tij=[0 -x(3) x(2) ; x(3) 0 -x(1) ; -x(2) x(1) 0 ];
+    skew_tij=[0 -x(3) x(2); x(3) 0 -x(1); -x(2) x(1) 0];
     E =skew_tij*Rij;
     err_epipolar(ii) = x2'*E*x1;
     % affine transformation constraints
@@ -42,13 +42,13 @@ disp(['The maximum residual of epipolar constraint: ' num2str(max(abs(err_epipol
 disp(['The maximum residual of affine transformation constraints: ' num2str(max(abs(err_affinetransformation(:))))])
     
 %% run solver
-% set the 5th parameter as 0 (default), 48 solutions
+% set the 6th parameter as 0 (default), 48 solutions
 [cay_sols, t_sols, R_sols, cay_sols_all] = solver_depth_inter_2ac(Image1(1:2,:), Image2(1:2,:), At, R_cam, t_cam, 0);
 cay_sol = find_solution(cay_sols, cay_gt);
 t_sol = find_solution(t_sols, t_gt);
 cay_sol, t_sol, cay_gt, t_gt
 
-% set the 5th parameter as 1, 56 solutions.
+% set the 6th parameter as 1, 56 solutions.
 % according to our evaluation, 56-solution configuration has better numerical stability
 [cay_sols, t_sols, R_sols, cay_sols_all] = solver_depth_inter_2ac(Image1(1:2,:), Image2(1:2,:), At, R_cam, t_cam, 1);
 cay_sol = find_solution(cay_sols, cay_gt);
@@ -125,7 +125,7 @@ for ii = 1:2
     x2 = Image2(:, ii);
     % epipolar constraint of PC
     x = t_gt;
-    skew_tij=[0 -x(3) x(2) ; x(3) 0 -x(1) ; -x(2) x(1) 0 ];
+    skew_tij=[0 -x(3) x(2); x(3) 0 -x(1); -x(2) x(1) 0];
     E =skew_tij*R_gt;
     err_epipolar(ii) = x2'*E*x1;
     % affine transformation constraints

@@ -5,7 +5,7 @@ function [Image1, Image2, At, R_extrinsic_para, T_extrinsic_para, R_gt, cay_gt, 
 % (1) 1 affine correspondence: (cam1 at time i) <--> (cam2 at time j)
 % (2) 1 affine correspondence: (cam2 at time i) <--> (cam1 at time j)
 %% intra-cam affine correspondences contain
-% (1) 1 affine correspondence: (cam1 at time i) <--> (cam1 at time i)
+% (1) 1 affine correspondence: (cam1 at time i) <--> (cam1 at time j)
 % (2) 1 affine correspondence: (cam2 at time i) <--> (cam2 at time j)
 
 n_cam = 2;
