@@ -5,12 +5,12 @@ Source codes and Matlab mex files with demo code are provided in the package. Th
 
 # Reference
 
-[1] Banglei Guan, and Ji Zhao. [**Relative Pose Estimation for Multi-Camera Systems from Two Affine Correspondences**](https://www.ecva.net/papers/eccv_2022/papers_ECCV/html/5358_ECCV_2022_paper.php). European Conference on Computer Vision, 2022. (Oral)
+[1] Banglei Guan, and Ji Zhao. [**Affine Correspondences between Multi-Camera Systems for 6DOF Relative Pose Estimation**](https://www.ecva.net/papers/eccv_2022/papers_ECCV/html/5358_ECCV_2022_paper.php). European Conference on Computer Vision, 2022. (Oral)
 
 If you use this package in an academic work, please cite:
 
-    @inproceedings{guan2022relative,
-      title={Relative Pose Estimation for Multi-Camera Systems from Two Affine Correspondences},
+    @inproceedings{guan2022affine,
+      title={Affine Correspondences between Multi-Camera Systems for 6DOF Relative Pose Estimation},
       author={Guan, Banglei and Zhao, Ji},
       booktitle={European Conference on Computer Vision},
       year={2022}
