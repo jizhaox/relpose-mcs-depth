@@ -1,4 +1,4 @@
-function [Image1, Image2, At, R_gt, cay_gt, t_gt] = generate_2AC_single_data(n_point)
+function [Image1, Image2, At, R_gt, cay_gt, t_gt, theta_gt] = generate_2AC_mono_data(n_point)
 
 %% Two affine correspondences of a single camera
 n_view = 2;
@@ -9,6 +9,7 @@ R_gt = cayley_rotation(cay);
 q = rotm2quat(R_gt);
 cay_gt = q(2:4)/q(1);
 cay_gt = cay_gt(:);
+theta_gt = acos(2*q(1)^2-1);
 
 t_gt = rand(3, 1);
 
@@ -59,4 +60,5 @@ Image1(:,2) = x_i{2,1}(:,1);
 Image2(:,2) = x_i{2,2}(:,1);
 H(:,:,2) = DLT_homography(x_i{2,1}(:,2:end)',x_i{2,2}(:,2:end)');
 At(:,:,2) = get_affinetransformation(H(:,:,2), Image1(:,2), Image2(:,2));
-end
+
+check_constraint_mono(Image1, Image2, At, R_gt, t_gt);

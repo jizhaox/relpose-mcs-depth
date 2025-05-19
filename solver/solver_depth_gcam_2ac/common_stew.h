@@ -508,7 +508,7 @@ void calculate_translation_stew(
         cy = sols(1, j);
         cz = sols(2, j);
 
-        if (abs(cx.imag()) > NEAR_ZERO_THRESHOLD || abs(cy.imag()) > NEAR_ZERO_THRESHOLD || abs(cy.imag()) > NEAR_ZERO_THRESHOLD)
+        if (abs(cx.imag()) > NEAR_ZERO_THRESHOLD || abs(cy.imag()) > NEAR_ZERO_THRESHOLD || abs(cz.imag()) > NEAR_ZERO_THRESHOLD)
             continue;
 
         x = cx.real();
@@ -520,7 +520,7 @@ void calculate_translation_stew(
         q_arr.push_back(q);
 
         Eigen::Matrix<double,3,3> Rwf2;
-        quad2rotm(Rwf2, q);
+        cayley2rotm(Rwf2, q);
 
         Eigen::Matrix<double, 5, 3> M_double;
         calculate_M_5_by_3(M_double, M, x, y, z);

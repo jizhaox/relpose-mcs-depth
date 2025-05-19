@@ -1,5 +1,4 @@
 #include <Eigen/Dense>
-#include "mex.h"
 
 using namespace Eigen;
 
@@ -19,7 +18,7 @@ MatrixXcd solver_depth_mono_2ac_core(const VectorXd& data)
 	for (int i = 0; i < 810; i++) { C0(C0_ind[i]) = coeffs(coeffs0_ind[i]); }
 	for (int i = 0; i < 450; i++) { C1(C1_ind[i]) = coeffs(coeffs1_ind[i]); } 
 
-	Matrix<double,36,20> C12 = C0.partialPivLu().solve(C1);
+	Matrix<double,36,20> C12 = C0.colPivHouseholderQr().solve(C1);
 
 	// Setup action matrix
 	Matrix<double,30, 20> RR;
@@ -46,4 +45,3 @@ MatrixXcd solver_depth_mono_2ac_core(const VectorXd& data)
 
 	return sols;
 }
-

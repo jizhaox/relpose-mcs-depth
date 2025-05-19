@@ -1,5 +1,4 @@
 #include <Eigen/Dense>
-#include "mex.h"
 
 using namespace Eigen;
 
@@ -47,4 +46,3 @@ MatrixXcd solver_depth_inter_2ac_core_56(const VectorXd& data)
 
 	return sols;
 }
-

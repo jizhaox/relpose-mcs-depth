@@ -49,7 +49,7 @@ void set_value_column_major(double* array, int num_r, int num_c, int r, int c, d
     return;
 }
 
-void quad2rotm(Eigen::Matrix<double,3,3>& rotm, Eigen::Matrix<double,3,1>& q)
+void cayley2rotm(Eigen::Matrix<double,3,3>& rotm, Eigen::Matrix<double,3,1>& q)
 {
     double qx = q(0);
     double qy = q(1);
@@ -66,7 +66,7 @@ void quad2rotm(Eigen::Matrix<double,3,3>& rotm, Eigen::Matrix<double,3,1>& q)
     return;
 }
 
-void quad2rotm(std::vector<Eigen::Matrix<double,3,3>>& rotm, std::vector<Eigen::Matrix<double,3,1>>& q_arr)
+void cayley2rotm(std::vector<Eigen::Matrix<double,3,3>>& rotm, std::vector<Eigen::Matrix<double,3,1>>& q_arr)
 {
     rotm.clear();
     Eigen::Matrix<double,3,3> M;

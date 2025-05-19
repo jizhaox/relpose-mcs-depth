@@ -10,9 +10,9 @@ using namespace Eigen;
 
 enum AC_TYPE{
     INTER_CAM_CONSTRAINT_FULL,
-	INTRA_CAM_CONSTRAINT_FULL,
-	INTER_CAM_CONSTRAINT_PARTIAL,
-	INTRA_CAM_CONSTRAINT_PARTIAL
+    INTRA_CAM_CONSTRAINT_FULL,
+    INTER_CAM_CONSTRAINT_PARTIAL,
+    INTRA_CAM_CONSTRAINT_PARTIAL
 };
 
 void format_convert(
@@ -38,7 +38,7 @@ void format_convert(
     Eigen::Matrix3d A;
     for (int k = 0; k < 2; k++)
     {
-		A.setZero();
+        A.setZero();
         for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 2; j++)
@@ -59,16 +59,14 @@ void format_convert(
         }
         T_camera.push_back(T);
     }
-	Eigen::Vector3d X1, X2;
+    Eigen::Vector3d X1, X2;
     for (int k = 0; k < 2; k++)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 3; i++)
         {
-            X1(i) = input_Image_1[k*2+i];
-            X2(i) = input_Image_2[k*2+i];
+            X1(i) = input_Image_1[k*3+i];
+            X2(i) = input_Image_2[k*3+i];
         }
-		X1(2) = 1.0;
-		X2(2) = 1.0;
         Image1.push_back(X1);
         Image2.push_back(X2);
     }
@@ -76,7 +74,7 @@ void format_convert(
     return;
 }
 
-void quad2rotm(Eigen::Matrix<double,3,3>& rotm, Eigen::Matrix<double,3,1>& q)
+void cayley2rotm(Eigen::Matrix<double,3,3>& rotm, Eigen::Matrix<double,3,1>& q)
 {
     double qx = q(0);
     double qy = q(1);
@@ -93,7 +91,7 @@ void quad2rotm(Eigen::Matrix<double,3,3>& rotm, Eigen::Matrix<double,3,1>& q)
     return;
 }
 
-void quad2rotm(std::vector<Eigen::Matrix<double,3,3>>& rotm, std::vector<Eigen::Matrix<double,3,1>>& q_arr)
+void cayley2rotm(std::vector<Eigen::Matrix<double,3,3>>& rotm, std::vector<Eigen::Matrix<double,3,1>>& q_arr)
 {
     rotm.clear();
     Eigen::Matrix<double,3,3> M;
