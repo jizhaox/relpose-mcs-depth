@@ -1,4 +1,4 @@
-function sol = find_solution(sols, gt)
+function [sol, idx] = find_solution(sols, gt)
 
 num_sol = size(sols, 2);
 if (num_sol < 1)
