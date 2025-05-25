@@ -1,42 +1,69 @@
 function generate_construct_coeff()
-syms x1_1 x1_2 x1_3 real
-syms x2_1 x2_2 x2_3 real
-syms a11 a12 a21 a22 real
-syms q1_11 q1_12 q1_13 q1_21 q1_22 q1_23 q1_31 q1_32 q1_33 real
-syms q2_11 q2_12 q2_13 q2_21 q2_22 q2_23 q2_31 q2_32 q2_33 real
-syms s1_1 s1_2 s1_3 real
-syms s2_1 s2_2 s2_3 real
+%% generate the coefficients of the equations using symbolic computation
+
+% xij: image coordinates of i-th AC at j-th view
+syms x11_1 x11_2 x11_3 real
+syms x12_1 x12_2 x12_3 real
+syms x21_1 x21_2 x21_3 real
+syms x22_1 x22_2 x22_3 real
+% Ai: affine matrix of i-th AC
+syms a1_11 a1_12 a1_21 a1_22 real
+syms a2_11 a2_12 a2_21 a2_22 real
+% Qij, sij: extrinsic parameters of i-th AC at j-th view
+syms q11_11 q11_12 q11_13 q11_21 q11_22 q11_23 q11_31 q11_32 q11_33 real
+syms q12_11 q12_12 q12_13 q12_21 q12_22 q12_23 q12_31 q12_32 q12_33 real
+syms s11_1 s11_2 s11_3 real
+syms s12_1 s12_2 s12_3 real
+syms q21_11 q21_12 q21_13 q21_21 q21_22 q21_23 q21_31 q21_32 q21_33 real
+syms q22_11 q22_12 q22_13 q22_21 q22_22 q22_23 q22_31 q22_32 q22_33 real
+syms s21_1 s21_2 s21_3 real
+syms s22_1 s22_2 s22_3 real
+% pij, qij: plucker line of i-th AC at j-th view
+syms p11_1 p11_2 p11_3 real
+syms p12_1 p12_2 p12_3 real
+syms pq11_1 pq11_2 pq11_3 real
+syms pq12_1 pq12_2 pq12_3 real
+
+% unknown variables
 syms lmd1 lmd2 real
 syms qy real
-syms p1_1 p1_2 p1_3 real
-syms p2_1 p2_2 p2_3 real
-syms qp1_1 qp1_2 qp1_3 real
-syms qp2_1 qp2_2 qp2_3 real
 
-x1 = [x1_1; x1_2; x1_3];
-x2 = [x2_1; x2_2; x2_3];
-A = [a11, a12, 0; a21, a22, 0; 0, 0, 0];
-Q1 = [q1_11, q1_12, q1_13; q1_21, q1_22, q1_23; q1_31, q1_32, q1_33];
-Q2 = [q2_11, q2_12, q2_13; q2_21, q2_22, q2_23; q2_31, q2_32, q2_33];
-s1 = [s1_1; s1_2; s1_3];
-s2 = [s2_1; s2_2; s2_3];
+x11 = [x11_1; x11_2; x11_3];
+x12 = [x12_1; x12_2; x12_3];
+x21 = [x21_1; x21_2; x21_3];
+x22 = [x22_1; x22_2; x22_3];
+A1 = [a1_11, a1_12, 0; a1_21, a1_22, 0; 0, 0, 0];
+A2 = [a2_11, a2_12, 0; a2_21, a2_22, 0; 0, 0, 0];
+Q11 = [q11_11, q11_12, q11_13; q11_21, q11_22, q11_23; q11_31, q11_32, q11_33];
+Q12 = [q12_11, q12_12, q12_13; q12_21, q12_22, q12_23; q12_31, q12_32, q12_33];
+s11 = [s11_1; s11_2; s11_3];
+s12 = [s12_1; s12_2; s12_3];
+Q21 = [q21_11, q21_12, q21_13; q21_21, q21_22, q21_23; q21_31, q21_32, q21_33];
+Q22 = [q22_11, q22_12, q22_13; q22_21, q22_22, q22_23; q22_31, q22_32, q22_33];
+s21 = [s21_1; s21_2; s21_3];
+s22 = [s22_1; s22_2; s22_3];
 R = [1-qy^2, 0, -2*qy; 0, 1+qy^2, 0; 2*qy, 0, 1-qy^2];
-p1 = [p1_1; p1_2; p1_3];
-p2 = [p2_1; p2_2; p2_3];
-qp1 = [qp1_1; qp1_2; qp1_3];
-qp2 = [qp2_1; qp2_2; qp2_3];
-t1 = qp1 + lmd1 * p1;
-t2 = qp2 + lmd2 * p2;
+p11 = [p11_1; p11_2; p11_3];
+p12 = [p12_1; p12_2; p12_3];
+pq11 = [pq11_1; pq11_2; pq11_3];
+pq12 = [pq12_1; pq12_2; pq12_3];
+t1 = pq11 + lmd1 * p11;
+t2 = pq12 + lmd2 * p12;
 
-E2 = Q2'*(R*skew(s1-t1) + skew(t2-s2)*R)*Q1;
-eq_epi = x2'*E2*x1;
-eq_aff = E2'*x2 + A'*E2*x1;
-eqs = [eq_epi; eq_aff(1:2)];
+E1 = Q12'*(R*skew(s11-t1) + skew(t2-s12)*R)*Q11;
+%eq_epi_1 = x12'*E1*x11;
+eq_aff_1 = E1'*x12 + A1'*E1*x11;
+
+E2 = Q22'*(R*skew(s21-t1) + skew(t2-s22)*R)*Q21;
+eq_epi_2 = x22'*E2*x21;
+eq_aff_2 = E2'*x22 + A2'*E2*x21;
+
+eqs = [eq_aff_1(1); eq_epi_2; eq_aff_2(1)];
 
 [A_sym, b] = equationsToMatrix(eqs, [lmd1, lmd2]);
 A = [A_sym, -b];
 % check
-%simplify(A*[lmd1; lmd2; 1] - eqs)
+simplify(A*[lmd1; lmd2; 1] - eqs)
 
 syms c11_2 c11_1 c11_0 real
 syms c12_2 c12_1 c12_0 real

@@ -1,3 +1,6 @@
+clear
+format long
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2AC vertical solver & inter-camera case %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('--------------2AC solver with known vertical direction & inter-camera case--------------')
 %% generate synthetic data

@@ -6,81 +6,142 @@ if 0
     generate_construct_coeff();
 end
 
-warning off
-
 match_info = match_type_gcam_ac(match_type);
+
+R_sol_all = [];
+t_sol_all = [];
+theta_y_sol_all = [];
 % choose arbitray one AC to build the reference
 for ii = 1:1
-    x1 = Image1(:, ii);
-    x2 = Image2(:, ii);
-    A = At(:, :, ii);
-    % extract extrinsic parameters
-    idx1 = match_info{ii}.idx1;
-    idx2 = match_info{ii}.idx2;
-    Q1 = R_cam(:, :, idx1);
-    s1 = t_cam(:, idx1);
-    Q2 = R_cam(:, :, idx2);
-    s2 = t_cam(:, idx2);
-    % line
-    [p1, q1, qp1] = plucker_line(x1, Q1, s1);
-    [p2, q2, qp2] = plucker_line(x2, Q2, s2);
+    if ii == 1
+        i1 = 1;
+        i2 = 2;
+    else
+        i1 = 2;
+        i2 = 1;
+    end
+    % xij: image coordinates of i-th AC at j-th view
+    x11 = Image1(:, i1);
+    x12 = Image2(:, i1);
+    x21 = Image1(:, i2);
+    x22 = Image2(:, i2);
+    % Ai: affine matrix of i-th AC
+    A1 = At(:, :, i1);
+    A2 = At(:, :, i2);
 
-    x1_1 = x1(1);
-    x1_2 = x1(2);
-    x1_3 = x1(3);
-    x2_1 = x2(1);
-    x2_2 = x2(2);
-    x2_3 = x2(3);
-    a11 = A(1,1);
-    a12 = A(1,2);
-    a21 = A(2,1);
-    a22 = A(2,2);
-    q1_11 = Q1(1,1);
-    q1_12 = Q1(1,2);
-    q1_13 = Q1(1,3);
-    q1_21 = Q1(2,1);
-    q1_22 = Q1(2,2);
-    q1_23 = Q1(2,3);
-    q1_31 = Q1(3,1);
-    q1_32 = Q1(3,2);
-    q1_33 = Q1(3,3);
-    q2_11 = Q2(1,1);
-    q2_12 = Q2(1,2);
-    q2_13 = Q2(1,3);
-    q2_21 = Q2(2,1);
-    q2_22 = Q2(2,2);
-    q2_23 = Q2(2,3);
-    q2_31 = Q2(3,1);
-    q2_32 = Q2(3,2);
-    q2_33 = Q2(3,3);
-    s1_1 = s1(1);
-    s1_2 = s1(2);
-    s1_3 = s1(3);
-    s2_1 = s2(1);
-    s2_2 = s2(2);
-    s2_3 = s2(3);
-    p1_1 = p1(1);
-    p1_2 = p1(2);
-    p1_3 = p1(3);
-    p2_1 = p2(1);
-    p2_2 = p2(2);
-    p2_3 = p2(3);
-    qp1_1 = qp1(1);
-    qp1_2 = qp1(2);
-    qp1_3 = qp1(3);
-    qp2_1 = qp2(1);
-    qp2_2 = qp2(2);
-    qp2_3 = qp2(3);
+    % Qij, sij: extrinsic parameters of i-th AC at j-th view
+    idx1 = match_info{i1}.idx1;
+    idx2 = match_info{i1}.idx2;
+    Q11 = R_cam(:, :, idx1);
+    s11 = t_cam(:, idx1);
+    Q12 = R_cam(:, :, idx2);
+    s12 = t_cam(:, idx2);
+
+    idx1 = match_info{i2}.idx1;
+    idx2 = match_info{i2}.idx2;
+    Q21 = R_cam(:, :, idx1);
+    s21 = t_cam(:, idx1);
+    Q22 = R_cam(:, :, idx2);
+    s22 = t_cam(:, idx2);
+
+    % pij, qij: plucker line of i-th AC at j-th view
+    [p11, ~, pq11] = plucker_line(x11, Q11, s11);
+    [p12, ~, pq12] = plucker_line(x12, Q12, s12);
+
+    % convert matrix/vector to scale variables
+    x11_1 = x11(1);
+    x11_2 = x11(2);
+    x11_3 = x11(3);
+    x12_1 = x12(1);
+    x12_2 = x12(2);
+    x12_3 = x12(3);
+    x21_1 = x21(1);
+    x21_2 = x21(2);
+    x21_3 = x21(3);
+    x22_1 = x22(1);
+    x22_2 = x22(2);
+    x22_3 = x22(3);
+
+    a1_11 = A1(1,1);
+    a1_12 = A1(1,2);
+    a1_21 = A1(2,1);
+    a1_22 = A1(2,2);
+    a2_11 = A2(1,1);
+    a2_12 = A2(1,2);
+    a2_21 = A2(2,1);
+    a2_22 = A2(2,2);
+
+    p11_1 = p11(1);
+    p11_2 = p11(2);
+    p11_3 = p11(3);
+    p12_1 = p12(1);
+    p12_2 = p12(2);
+    p12_3 = p12(3);
+    pq11_1 = pq11(1);
+    pq11_2 = pq11(2);
+    pq11_3 = pq11(3);
+    pq12_1 = pq12(1);
+    pq12_2 = pq12(2);
+    pq12_3 = pq12(3);
+
+    q11_11 = Q11(1,1);
+    q11_12 = Q11(1,2);
+    q11_13 = Q11(1,3);
+    q11_21 = Q11(2,1);
+    q11_22 = Q11(2,2);
+    q11_23 = Q11(2,3);
+    q11_31 = Q11(3,1);
+    q11_32 = Q11(3,2);
+    q11_33 = Q11(3,3);
+    q12_11 = Q12(1,1);
+    q12_12 = Q12(1,2);
+    q12_13 = Q12(1,3);
+    q12_21 = Q12(2,1);
+    q12_22 = Q12(2,2);
+    q12_23 = Q12(2,3);
+    q12_31 = Q12(3,1);
+    q12_32 = Q12(3,2);
+    q12_33 = Q12(3,3);
+    s11_1 = s11(1);
+    s11_2 = s11(2);
+    s11_3 = s11(3);
+    s12_1 = s12(1);
+    s12_2 = s12(2);
+    s12_3 = s12(3);
+    q21_11 = Q21(1,1);
+    q21_12 = Q21(1,2);
+    q21_13 = Q21(1,3);
+    q21_21 = Q21(2,1);
+    q21_22 = Q21(2,2);
+    q21_23 = Q21(2,3);
+    q21_31 = Q21(3,1);
+    q21_32 = Q21(3,2);
+    q21_33 = Q21(3,3);
+    q22_11 = Q22(1,1);
+    q22_12 = Q22(1,2);
+    q22_13 = Q22(1,3);
+    q22_21 = Q22(2,1);
+    q22_22 = Q22(2,2);
+    q22_23 = Q22(2,3);
+    q22_31 = Q22(3,1);
+    q22_32 = Q22(3,2);
+    q22_33 = Q22(3,3);
+    s21_1 = s21(1);
+    s21_2 = s21(2);
+    s21_3 = s21(3);
+    s22_1 = s22(1);
+    s22_2 = s22(2);
+    s22_3 = s22(3);
     
-    %
+    % construct coefficients for the equation about qy
     construct_coeff;
     
     % solver qy
     qy_all = roots(coef_eq);
     idx = not(imag( qy_all ));
     qy_sol = qy_all(idx);
-    theta_y_sol = atan(qy_sol)*2;
-
+    
+    % calculate translation
     n_sol = numel(qy_sol);
     R_sol = zeros(3, 3, n_sol);
     t_sol = zeros(3, n_sol);
@@ -99,18 +160,23 @@ for ii = 1:1
               c21, c22, c23;
               c31, c32, c33];
         lmd = -F(:, 1:2)\F(:, 3);
-        t1 = qp1 + lmd(1) * p1;
-        t2 = qp2 + lmd(2) * p2;
+        t1 = pq11 + lmd(1) * p11;
+        t2 = pq12 + lmd(2) * p12;
         
         R = [1-qy^2, 0, -2*qy; 0, 1+qy^2, 0; 2*qy, 0, 1-qy^2] / (1+qy^2);
         R_sol(:, :, k) = R;
         t_sol(:, k) = -R*t1 + t2;
     end
-
+    theta_y_sol_all{ii} = atan(qy_sol)*2;
+    R_sol_all{ii} = R_sol;
+    t_sol_all{ii} = t_sol;
 end
+R_sol = R_sol_all{1};
+t_sol = t_sol_all{1};
+theta_y_sol = theta_y_sol_all{1};
 
-function [p, q, q_cross_p] = plucker_line(x, Q, s)
+function [p, q, p_cross_q] = plucker_line(x, Q, s)
 p = Q*x;
 p = p/norm(p(:));
 q = cross(s, p);
-q_cross_p = cross(q, p);
+p_cross_q = cross(p, q);
