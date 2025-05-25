@@ -1,9 +1,9 @@
-function [R_sol, t_sol, theta_y_sol] = solver_depth_2ac_4dof(Image1, Image2, At, R_cam, t_cam, match_type)
+function [R_sol, t_sol, theta_y_sol] = solver_depth_2ac_4dof_v2(Image1, Image2, At, R_cam, t_cam, R_imu, match_type)
 
 %% generate the coefficients by symbolic computation
 % notice: run only once
 if 0
-    generate_construct_coeff();
+    generate_construct_coeff_v2();
 end
 
 match_info = match_type_gcam_ac(match_type);
@@ -132,9 +132,32 @@ for ii = 1:1
     s22_1 = s22(1);
     s22_2 = s22(2);
     s22_3 = s22(3);
+
+    % Rimu_left, Rimu_right
+    Rimu_left = R_imu(:, :, 1);
+    Rimu_right = R_imu(:, :, 2);
+    rl_11 = Rimu_left(1, 1);
+    rl_12 = Rimu_left(1, 2);
+    rl_13 = Rimu_left(1, 3);
+    rl_21 = Rimu_left(2, 1);
+    rl_22 = Rimu_left(2, 2);
+    rl_23 = Rimu_left(2, 3);
+    rl_31 = Rimu_left(3, 1);
+    rl_32 = Rimu_left(3, 2);
+    rl_33 = Rimu_left(3, 3);
+
+    rr_11 = Rimu_right(1, 1);
+    rr_12 = Rimu_right(1, 2);
+    rr_13 = Rimu_right(1, 3);
+    rr_21 = Rimu_right(2, 1);
+    rr_22 = Rimu_right(2, 2);
+    rr_23 = Rimu_right(2, 3);
+    rr_31 = Rimu_right(3, 1);
+    rr_32 = Rimu_right(3, 2);
+    rr_33 = Rimu_right(3, 3);
     
     % construct coefficients for the equation about qy
-    construct_coeff;
+    construct_coeff_v2;
     
     % solver qy
     qy_all = roots(coef_eq);
@@ -163,7 +186,8 @@ for ii = 1:1
         t1 = pq11 + lmd(1) * p11;
         t2 = pq12 + lmd(2) * p12;
         
-        R = [1-qy^2, 0, -2*qy; 0, 1+qy^2, 0; 2*qy, 0, 1-qy^2] / (1+qy^2);
+        Ry = [1-qy^2, 0, -2*qy; 0, 1+qy^2, 0; 2*qy, 0, 1-qy^2] / (1+qy^2);
+        R = Rimu_left*Ry*Rimu_right;
         R_sol(:, :, k) = R;
         t_sol(:, k) = -R*t1 + t2;
     end

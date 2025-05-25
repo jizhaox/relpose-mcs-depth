@@ -42,7 +42,6 @@ t_gt = rand(3, 1);
 % transformation from body reference at time i to time j
 T_gt = [R_gt t_gt; 0 0 0 1];
 
-
 %% generating affine correspondences
 % generating random scene points
 [PT, Distance, Nvector] = generate_3Dscenepoints(n_point);
