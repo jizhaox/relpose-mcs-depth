@@ -33,15 +33,14 @@ match_type = 'inter';
 [R_imu, theta_y_gt] = generate_imu_measurement(R_gt);
 
 %% run solver
-%% method 1: transform observations using IMU measurements
-[R_sol, t_sol, theta_y_sol] = solver_depth_2ac_4dof_v1(Image1, Image2, At, R_cam, t_cam, R_imu, match_type);
-% display
-[~, idx] = min(abs(theta_y_sol - theta_y_gt));
-R_sol(:, :, idx), R_gt
-t_sol(:, idx), t_gt
+% method 1: convert observations using IMU measurements
+R_left = R_imu(:, :, 1);
+R_right = R_imu(:, :, 2);
 
-%% method 2: It is slow than the 1st method
+
+% method 2: use the second solver. general but slow
 [R_sol, t_sol, theta_y_sol] = solver_depth_2ac_4dof_v2(Image1, Image2, At, R_cam, t_cam, R_imu, match_type);
+
 % display
 [~, idx] = min(abs(theta_y_sol - theta_y_gt));
 R_sol(:, :, idx), R_gt
@@ -55,15 +54,6 @@ match_type = 'intra';
 [R_imu, theta_y_gt] = generate_imu_measurement(R_gt);
 
 %% run solver
-%% method 1: transform observations using IMU measurements
-[R_sol, t_sol, theta_y_sol] = solver_depth_2ac_4dof_v1(Image1, Image2, At, R_cam, t_cam, R_imu, match_type);
-theta_y_sol,theta_y_gt
-% display
-[~, idx] = min(abs(theta_y_sol - theta_y_gt));
-R_sol(:, :, idx), R_gt
-t_sol(:, idx), t_gt
-
-%% method 2: It is slow than the 1st method
 [R_sol, t_sol, theta_y_sol] = solver_depth_2ac_4dof_v2(Image1, Image2, At, R_cam, t_cam, R_imu, match_type);
 
 % display
