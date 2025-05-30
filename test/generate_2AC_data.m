@@ -1,4 +1,4 @@
-function [Image1, Image2, At, R_extrinsic_para, T_extrinsic_para, R_gt, cay_gt, t_gt, theta_gt, match_info] = generate_2AC_data(match_type)
+function [Image1, Image2, At, R_extrinsic_para, T_extrinsic_para, R_gt, cay_gt, t_gt, theta_gt, match_info] = generate_2AC_data(match_type, num_ac)
 
 %% Two types of affine correspondence
 %% inter-cam affine correspondences contain
@@ -8,9 +8,11 @@ function [Image1, Image2, At, R_extrinsic_para, T_extrinsic_para, R_gt, cay_gt, 
 % (1) 1 affine correspondence: (cam1 at time i) <--> (cam1 at time j)
 % (2) 1 affine correspondence: (cam2 at time i) <--> (cam2 at time j)
 
-match_info = match_type_gcam_ac(match_type);
+if nargin < 2
+    num_ac = 2;
+end
+match_info = match_type_gcam_ac(match_type, num_ac);
 n_cam = 2;
-n_point = 2;
 
 %% define random extrinsic parameters
 cam_body_rotation = cell(n_cam, 1);
@@ -44,16 +46,16 @@ T_gt = [R_gt t_gt; 0 0 0 1];
 
 %% generating affine correspondences
 % generating random scene points
-[PT, Distance, Nvector] = generate_3Dscenepoints(n_point);
-points_all = cell(n_point, 1);
-for ii = 1:n_point
+[PT, Distance, Nvector] = generate_3Dscenepoints(num_ac);
+points_all = cell(num_ac, 1);
+for ii = 1:num_ac
     points_all{ii} = struct('point', PT(:,:,ii));
 end
 
 %% extract point observations
 % images at time i
-x_i = cell(n_point, n_cam);
-for ii = 1:n_point
+x_i = cell(num_ac, n_cam);
+for ii = 1:num_ac
     PT = points_all{ii}.point;
     for jj = 1:n_cam
         tmp = R_cam{jj}*PT+t_cam{jj};
@@ -68,8 +70,8 @@ for ii = 1:n_cam
     Rc_j{ii} = tmp(1:3,1:3);
     tc_j{ii} = tmp(1:3,4);
 end
-x_j = cell(n_point, n_cam);
-for ii = 1:n_point
+x_j = cell(num_ac, n_cam);
+for ii = 1:num_ac
     PT = points_all{ii}.point;
     for jj = 1:n_cam
         tmp = Rc_j{jj}*PT+tc_j{jj};
@@ -78,13 +80,17 @@ for ii = 1:n_point
 end
 
 %% construct observations
-R_extrinsic_para = cat(3, cam_body_rotation{1}, cam_body_rotation{2});
-T_extrinsic_para = [cam_body_offset{1}, cam_body_offset{2}];
-Image1 = zeros(3, 2);
-Image2 = zeros(3, 2);
-At = zeros(2, 2, 2);
+R_extrinsic_para = zeros(3, 3, n_cam);
+T_extrinsic_para = zeros(3, n_cam);
+for ii = 1:n_cam
+    R_extrinsic_para(:, :, ii) = cam_body_rotation{ii};
+    T_extrinsic_para(:, ii) = cam_body_offset{ii};
+end
 
-for ii = 1:n_point
+Image1 = zeros(3, num_ac);
+Image2 = zeros(3, num_ac);
+At = zeros(2, 2, num_ac);
+for ii = 1:num_ac
     idx1 = match_info{ii}.idx1;
     idx2 = match_info{ii}.idx2;
 

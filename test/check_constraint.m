@@ -2,12 +2,13 @@ function [err_epipolar, err_affinetransformation] = check_constraint(Image1, Ima
 
 %% check data
 % For noise-free data, the residual of epipolar constraint and affine transformation constraints should be small (Eqs.(7) and (8) in the paper)
-err_epipolar = zeros(2, 1);
-err_affinetransformation = zeros(2, 2);
+num_ac = size(Image1, 2);
+err_epipolar = zeros(num_ac, 1);
+err_affinetransformation = zeros(2, num_ac);
 Tf_gt = [R_gt t_gt; 0 0 0 1];
 Tf_cam{1} = [R_cam(:,:,1), t_cam(:,1); 0, 0, 0, 1];
 Tf_cam{2} = [R_cam(:,:,2), t_cam(:,2); 0, 0, 0, 1];
-for ii = 1:2
+for ii = 1:num_ac
     idx1 = match_info{ii}.idx1;
     idx2 = match_info{ii}.idx2;
     x1 = Image1(:, ii);

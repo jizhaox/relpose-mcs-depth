@@ -96,9 +96,9 @@ for i = 1:3
     for j = 1:3
         [coef_tmp, term_tmp] = coeffs(A(i,j), qy);
         for k = 1:3
-            fprintf(fid, '%s\n', ['c' num2str(i) num2str(j) '_' num2str(3-k) ' = ' char(coef_tmp(k)) ';']);
+            fprintf(fid, '%s\n', ['c' num2str(i) num2str(j) '_' num2str(3-k) ' = ' char(simplify(coef_tmp(k))) ';']);
         end
     end
 end
-fprintf(fid, '%s\n', ['coef_eq = ' char(coef_eq) ';']);
+fprintf(fid, '%s\n', ['coef_eq = ' char(simplify(coef_eq)) ';']);
 fclose(fid);
